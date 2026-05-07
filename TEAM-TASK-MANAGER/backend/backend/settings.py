@@ -75,6 +75,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Clean up DATABASE_URL if it's empty or bytes to prevent dj_database_url errors
+_db_url = os.getenv('DATABASE_URL')
+if _db_url:
+    if isinstance(_db_url, bytes):
+        _db_url = _db_url.decode('utf-8')
+    if not _db_url.strip():
+        # If it's just whitespace or empty, remove it from env so config() uses default
+        os.environ.pop('DATABASE_URL', None)
+
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
