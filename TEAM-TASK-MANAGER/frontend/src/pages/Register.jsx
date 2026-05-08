@@ -19,7 +19,10 @@ const Register = () => {
       await axiosInstance.post('register/', formData);
       navigate('/login');
     } catch (err) {
-      setError('Registration failed. Username or email might be taken.');
+      const msg = err.response?.data 
+        ? Object.values(err.response.data).flat().join(' ') 
+        : 'Registration failed. Please check your connection.';
+      setError(msg);
     }
   };
 
